@@ -89,7 +89,6 @@ const AddPlan = ({ refetch }) => {
     try {
       console.log(formData,"formData")
      const result= await plansApi.create(formData);
-     console.log(result,"result")
 
       if(result.data.meta.status){
         toast.success("Submitted");

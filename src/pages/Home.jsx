@@ -9,6 +9,8 @@ import {
   IconButton,
  
 } from "@mui/material";
+import Swal from 'sweetalert2'
+
 import { toast } from "react-toastify";
 import Pagination from "../components/common/Pagination";
 import staticPageApi from "../api/staticPage";
@@ -28,6 +30,8 @@ const Home = () => {
 
 
   useEffect(() => {
+    setLoading(true);
+
     (async () => {
       try {
 
@@ -120,6 +124,36 @@ const Home = () => {
         e.target.disabled = false;
     }
 }
+
+async function handleStatusChange(_id, data) {
+  if (!_id || !data) {
+    return false
+  }
+  
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `You want to change status ${data == 'ACTIVE' ? 'Deactive' : 'Active'}!`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes!',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await staticPageApi.updateStatus({_id, status:data === 'ACTIVE' ? 'DEACTIVE' : 'ACTIVE'})
+        .then((d) => {
+          Swal.fire({
+            title: 'Changed!',
+            text: 'Status has been updated.',
+            icon: 'success',
+            confirmButtonColor: '#4CAF50' 
+          })
+          setHandleUpdate(!handleUpdate)
+        })
+        .catch((err) => console.log('Err -> ', err))
+    }
+  })
+}
   return (
     <div>
       {/* <div className="p-5 rounded-md shadow-md bg-white mb-5">
@@ -166,8 +200,12 @@ const Home = () => {
 
                     <th className="text-center px-2 py-3 border-b">Date</th>
                     <th className="text-center px-2 py-3 border-b">Status</th>
-                    <th className="px-2 py-3 border-b"></th>
-                    <th className="px-2 py-3 border-b"></th>
+
+                    <th className="px-2 py-3 border-b">Update</th>
+                    <th className="px-2 py-3 border-b">Delete</th>
+                    <th className="px-2 py-3 border-b">Action</th>
+
+
                   </tr>
                 </thead>
                 <tbody>
@@ -215,6 +253,20 @@ const Home = () => {
                         >
                           <Delete size="small" />
                         </IconButton>
+                      </td>
+
+                      <td
+                        className="text-center border-b"
+                      >
+                        <p onClick={() => handleStatusChange(item._id, item?.status)}
+                            style={{
+                              backgroundColor: item?.status === 'ACTIVE' ? 'green' : 'red',
+                              color: 'white'
+                            }}
+                        className="px-2 py-2  group rounded-full text-sm bg-[#000] bg-opacity-30 text-black cursor-pointer overflow-hidden"
+                        >
+                        {item?.status}
+                        </p>
                       </td>
                     </tr>
                   ))}

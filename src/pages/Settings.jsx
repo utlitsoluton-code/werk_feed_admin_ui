@@ -57,7 +57,12 @@ const Settings = () => {
       <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">
         Information Detail
       </h1>
-      <div className="flex mt-10 rounded-md px-5 py-8 bg-white gap-5">
+      {isLoading && (
+          <div className="pt-10 flex justify-center">
+            <CircularProgress />
+          </div>
+        )}
+      {!isLoading &&<div className="flex mt-10 rounded-md px-5 py-8 bg-white gap-5">
         <div className="w-1/2 mt-10 rounded-xl shadow-xl bg-white px-5 py-5">
           {" "}
           <div className="relative">
@@ -200,7 +205,7 @@ const Settings = () => {
           <div>
         </div>
         </div>}
-      </div>
+      </div>}
       {/* update modal */}
       <Modal
         open={Boolean(editProfile)}
