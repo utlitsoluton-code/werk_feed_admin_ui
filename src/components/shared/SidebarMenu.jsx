@@ -1,14 +1,9 @@
-import { Home, LocationCity,CardMembership } from '@mui/icons-material';
+import { Home,CardMembership } from '@mui/icons-material';
 import { Link, NavLink } from 'react-router-dom';
-import logo from '../../assets/logo.png';
 import { BsFillPinAngleFill } from 'react-icons/bs';
-import { BiSolidCategoryAlt } from 'react-icons/bi';
-import { AiFillCar } from 'react-icons/ai';
-import { FaCarSide, FaTram } from 'react-icons/fa';
-import { FaArrowRightToCity } from 'react-icons/fa6';
-import { RiLoopRightLine } from 'react-icons/ri';
 import { FaQuora } from "react-icons/fa";
 import SettingsIcon from '@mui/icons-material/Settings';
+import PeopleIcon from '@mui/icons-material/People';
 
 const NavMenu = ({ children, to, Icon }) => {
     return <NavLink to={to} className={({ isActive }) => `text-sm flex gap-x-2 leading-none items-center py-3 px-3 ${isActive && 'bg-[#f2f2f2] font-medium text-[#853095]'} duration-300 hover:bg-[#f2f2f2] rounded-l-lg`}>
@@ -24,6 +19,11 @@ const SidebarMenu = () => {
             name: 'Home',
             to: '/',
             Icon: Home
+        },
+        {
+            name: 'Users',
+            to: 'users',
+            Icon: PeopleIcon
         },
         {
             name: 'Plans',

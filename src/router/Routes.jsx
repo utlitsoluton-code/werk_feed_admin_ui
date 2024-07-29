@@ -12,6 +12,7 @@ import AddFaq from "../components/Faqs/AddFaq";
 import Plan from "../pages/Plan";
 import AddPlan from "../components/Plan/AddPlan";
 import AddTerm from './../components/StaticData/AddTerm';
+import Users from "../pages/User";
 
 
 
@@ -28,6 +29,10 @@ const Routes = () => {
             {
               path: "/",
               element: <Home />,
+            },
+            {
+              path: "/users",
+              element: <Users />,
             },
             {
               path: "/blogs",
