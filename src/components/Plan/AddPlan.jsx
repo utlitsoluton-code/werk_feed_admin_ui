@@ -254,6 +254,7 @@ const AddPlan = ({ refetch }) => {
                 fullWidth
                 size="small"
                 label="Duration"
+                type="text"
                 variant="outlined"
                 value={plan.duration}
                 required

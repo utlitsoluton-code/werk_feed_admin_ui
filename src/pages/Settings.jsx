@@ -39,7 +39,6 @@ const Settings = () => {
       try {
         setLoading(true);
         const res = await contactInfoApi.readDetail();
-        console.log(res?.data?.data, "resxxx");
         if (res?.data) {
           const data = res?.data?.data;
           setInfoData(data);
@@ -133,8 +132,15 @@ const Settings = () => {
               key="email"
               className="bg-white text-sm shadow-lg px-3 py-2 rounded-lg border flex justify-between gap-3 items-center"
             >
-              <span>Email:</span>
-              <span>{infoData?.email}</span>
+              <span>Support Email:</span>
+              <span>{infoData?.supportEmail}</span>
+            </li>
+            <li
+              key="email"
+              className="bg-white text-sm shadow-lg px-3 py-2 rounded-lg border flex justify-between gap-3 items-center"
+            >
+              <span>Contact Email:</span>
+              <span>{infoData?.contactEmail}</span>
             </li>
             <li
               key="facebookLink"
@@ -247,13 +253,13 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
   const handleInfoDetail = async (e) => {
 
     e.preventDefault();
-    const { email, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink } = infoData;
+    const { contactEmail,supportEmail, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink } = infoData;
 
 
 
     // setLoading(true);
     try {
-      const result = await contactInfoApi.update(email, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink);
+      const result = await contactInfoApi.update(contactEmail,supportEmail, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink);
       console.log(result, "result");
       if (result.data.meta.status) {
         infoModel && close();
@@ -284,9 +290,18 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
                         variant="outlined"
                         fullWidth size='small'
                         type='email'
-                        name='email'
-                        value={infoData.email}
-                        onChange={(e) => setInfoData({ ...infoData, email: e.target.value })}
+                        name='supportEmail'
+                        value={infoData.supportEmail}
+                        onChange={(e) => setInfoData({ ...infoData, supportEmail: e.target.value })}
+                    />
+                    <TextField
+                        label="Email"
+                        variant="outlined"
+                        fullWidth size='small'
+                        type='email'
+                        name='contactEmail'
+                        value={infoData.contactEmail}
+                        onChange={(e) => setInfoData({ ...infoData, contactEmail: e.target.value })}
                     />
                     <TextField
                         label="Mobile"

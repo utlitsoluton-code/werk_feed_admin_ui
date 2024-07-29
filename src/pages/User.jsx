@@ -183,12 +183,14 @@ const Users = () => {
                 {data?.map((item) => (
                   <tr key={item?._id}>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.question}
+                      {item?.userId}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.answer}
+                      {item?.name ? item.name:"Anonymous"}
                     </td>
-
+                    <td className="text-center px-2 py-3 border-b">
+                      {item?.email ? item?.email:"NA"}
+                    </td>
                     <td className="text-center px-2 py-3 border-b">
                       {new Date(item?.createdAt).toLocaleString()}
                     </td>

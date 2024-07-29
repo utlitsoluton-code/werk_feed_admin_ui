@@ -13,11 +13,16 @@ const AdminProvider = ({ children }) => {
 
     // logout
     const logout = async() => {
-        // Cookies.remove('adminKey');
-        localStorage.removeItem('adminKey') // Remove token from local storage
+        const userKey = localStorage.getItem('adminKey');
+        if (!userKey) {
+           return false
+        }else{
+            localStorage.removeItem('adminKey') // Remove token from local storage
         await authApi.logout();
         setAdmin(false)
         window.location.pathname = '/';
+        }
+        
        
 
     }
