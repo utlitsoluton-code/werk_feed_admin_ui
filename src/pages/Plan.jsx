@@ -135,9 +135,7 @@ const Plan = () => {
           </Button>
         </Link>
       </div>
-      {/* <Button variant="outlined" startIcon={<Add />}>
-                    Filters
-                    </Button> */}
+   
       <div className="p-5 rounded-md shadow-md bg-white mb-5">
         <Filters
           searchKey={searchKey}
