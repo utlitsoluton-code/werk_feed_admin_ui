@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import Filters from "../components/common/Filters";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal, Button } from "@mui/material";
 import Swal from "sweetalert2";
 
 import Pagination from "../components/common/Pagination";
@@ -16,7 +16,15 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [handleUpdate, setHandleUpdate] = useState(false);
+  const [infoModel, setPlanDetailModel] = useState(null);
+  const [planData, setPlanData] = useState();
 
+  const onHandleModel = (orders) => {
+    console.log(orders, "orders");
+    // do something with orders
+    setPlanDetailModel(true);
+    setPlanData(orders);
+  };
   useEffect(() => {
     (async () => {
       try {
@@ -27,7 +35,7 @@ const Users = () => {
           setTotalCount(pagination?.totalCount);
           setTotalPages(pagination?.totalPages);
           setData(res.data.data);
-        }else if (res.data.meta.msg === "Session Expired.") {
+        } else if (res.data.meta.msg === "Session Expired.") {
           logout(); // Call the logout function
           const { logout } = useContext(AdminContext);
           toast.error("Session expired. Please login again.");
@@ -65,23 +73,7 @@ const Users = () => {
     setData(res?.data?.data);
   };
 
-  // delete trip
-  // const deletefaq = async (e, faqId) => {
-  //   e.target.disabled = true;
-  //   try {
-  //     const result = await usersApi.delete(faqId);
-  //     if (result.data.meta.status) {
-  //       toast.success("Deleted");
-  //       setHandleUpdate(!handleUpdate);
-  //     } else {
-  //       toast.error("Delete failed");
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   } finally {
-  //     e.target.disabled = false;
-  //   }
-  // };
+  
   async function handleStatusChange(_id, data) {
     if (!_id || !data) {
       return false;
@@ -118,7 +110,7 @@ const Users = () => {
     });
   }
 
-  const handleChangeRowsPerPage = async (event) => {
+  const handleChangeitemsPerPage = async (event) => {
     const contentPerPage = parseInt(event.target.value, 10);
     setContentPerPage(contentPerPage);
 
@@ -162,12 +154,10 @@ const Users = () => {
                   <th className="text-center px-2 py-3 border-b">user Id</th>
                   <th className="text-center px-2 py-3 border-b">Name</th>
                   <th className="text-center px-2 py-3 border-b">Email</th>
-
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
-                  {/* <th className="px-2 py-3 border-b">Update</th> */}
-                  {/* <th className="px-2 py-3 border-b">Delete</th> */}
                   <th className="px-2 py-3 border-b">Action</th>
+                  <th className="px-2 py-3 border-b">Plan</th>
                 </tr>
               </thead>
               <tbody>
@@ -177,7 +167,7 @@ const Users = () => {
                       totalCount={totalCount}
                       contentPerPage={contentPerPage}
                       onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      onitemsPerPageChange={handleChangeitemsPerPage}
                       page={page}
                     />
                   </td>
@@ -188,35 +178,18 @@ const Users = () => {
                       {item?.userId}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.name ? item.name:"Anonymous"}
+                      {item?.name ? item.name : "Anonymous"}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.email ? item?.email:"NA"}
+                      {item?.email ? item?.email : "NA"}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
                       {new Date(item?.createdAt).toLocaleString()}
                     </td>
-                    <td
-                      className="text-center px-4 py-3 border-b"
-                   
-                    >
+                    <td className="text-center px-4 py-3 border-b">
                       {item?.status}
                     </td>
-                    {/* <td className="px-1 py-3 border-b text-center">
-                      <Link to={`/faqs/add-faq?faqId=${item._id}`}>
-                        <IconButton size="small">
-                          <Edit size="small" />
-                        </IconButton>
-                      </Link>
-                    </td> */}
-                    {/* <td className="px-1 py-3 border-b text-center">
-                      <IconButton
-                        onClick={(e) => deletefaq(e, item._id)}
-                        size="small"
-                      >
-                        <Delete size="small" />
-                      </IconButton>
-                    </td> */}
+
                     <td className="text-center border-b">
                       <p
                         onClick={() =>
@@ -232,6 +205,24 @@ const Users = () => {
                         {item?.status}
                       </p>
                     </td>
+                    {item.orders.length > 0 ? (
+                      <td className="px-1 py-3 border-b text-center">
+                        <Button
+                          onClick={() => onHandleModel(item.orders)}
+                          variant="outlined"
+                        >
+                          Orders
+                        </Button>
+                      </td>
+                    ):(
+                      <td className="px-1 py-3 border-b text-center">
+                        <Button
+                          variant="outlined"
+                        >
+                          No Order
+                        </Button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -242,8 +233,76 @@ const Users = () => {
             </p>
           ))}
       </div>
+      {/* update info */}
+      <Modal
+        open={Boolean(infoModel)}
+        onClose={() => setPlanDetailModel(null)}
+        className="grid place-items-center"
+      >
+        <div className="p-4 rounded-lg shadow-lg border w-model bg-white outline-none">
+          <UpdateInformation
+            infoModel={infoModel}
+            planData={planData}
+            close={() => setPlanDetailModel(null)}
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
 
 export default Users;
+export const UpdateInformation = ({ infoModel, close, planData }) => {
+  useEffect(() => {}, [infoModel, planData]);
+
+  return (
+    <div className="p-4 rounded-lg border">
+      <h2 className="text-2xl text-center mb-5 font-medium">
+        Order Information
+      </h2>
+      {Array.isArray(planData) && planData?.length > 0 ? (
+        <table className="w-full text-sm">
+          <thead>
+            <tr>
+              <th className="text-center px-2 py-3 border-b">Order Id</th>
+              <th className="text-center px-2 py-3 border-b">Plan</th>
+              <th className="text-center px-2 py-3 border-b">Payment Status</th>
+              <th className="text-center px-2 py-3 border-b" align="right">
+                Order Amount
+              </th>
+              <th className="text-center px-2 py-3 border-b">Date</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr></tr>
+            {planData?.map((item) => (
+              <tr  key={item._id}   >
+                
+                <td className="text-center px-2 py-3 border-b">
+                  {item?.orderId}
+                </td>
+                <td className="text-center px-2 py-3 border-b">
+                  {item?.plan.title}
+                </td>
+                <td className="text-center px-2 py-3 border-b">
+                  {item?.status}
+                </td>
+                <td className="text-center px-2 py-3 border-b" align="right">
+                  {item.price}
+                </td>
+                <td className="text-center px-2 py-3 border-b">
+                  {new Date(item.createdAt).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="pt-10 text-center font-medium text-red-500">
+          No Item Found
+        </p>
+      )}
+    </div>
+  );
+};

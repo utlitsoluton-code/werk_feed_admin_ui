@@ -18,6 +18,8 @@ import AddCategory from './../components/Category/AddCategory';
 import Templates from '../pages/Templates';
 import AddTemplate from './../components/Template/AddTemplate';
 import Dashboard from "../pages/Dashboard";
+import Orderdeatil from './../components/dashboard/OrderDetail';
+
 
 
 
@@ -88,7 +90,10 @@ const Routes = () => {
               path: "/templates/add-template",
               element: <AddTemplate />,
             },
-            
+            {
+              path: "/orders/details",
+              element: <Orderdeatil />,
+            },
             {
               path: "/settings",
               element: <Settings />,

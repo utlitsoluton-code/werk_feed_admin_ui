@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import Pagination from "../common/Pagination";
 import orderApi from '../../api/subscriptions';
 import { toast } from "react-toastify";
-import { Button, CircularProgress, IconButton } from "@mui/material";
-import PreviewIcon from '@mui/icons-material/Preview';// Generate Order Data
+import { CircularProgress } from "@mui/material";
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
@@ -71,8 +70,7 @@ export default function Subscriptions() {
 
         if (res.data.meta.status) {
           const pagination = res?.data?.pagination;
-          setTotalCount(pagination?.totalCount);
-          setTotalPages(pagination?.totalPages);
+          setTotalCount(pagination?.total);
           setData(res.data.data);
         }else if (res.data.meta.msg === "Session Expired.") {
           logout(); // Call the logout function
@@ -88,7 +86,37 @@ export default function Subscriptions() {
       }
     })();
   }, [handleUpdate]);
-console.log(data,"dadata")
+
+  let clearAllQuery = async () => {
+    setSearchKey("", async () => {
+      const res = await planApi.readAll(contentPerPage, page, "");
+      if (res.data) {
+        const data = res?.data?.data;
+        const pagination = res?.data?.pagination;
+       setTotalCount(pagination?.totalCount);
+        setTotalPages(pagination?.totalPages);
+        setData(data);
+        setHandleUpdate(!handleUpdate);
+      }
+    });
+  };
+
+  const onSearchChange = async (event) => {
+    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    setData(res?.data?.data);
+  };
+
+  const handleChangePage = async (event, newPage) => {
+    setPage(newPage);
+    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    setData(res?.data?.data);
+  };
+  const handleChangeRowsPerPage = async (event) => {
+    const contentPerPage = parseInt(event.target.value, 10);
+
+    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    setData(res?.data?.data);
+  };
   return (
     <React.Fragment>
        <div className="mt-10 bg-white rounded-xl pb-10 overflow-hidden">
@@ -108,12 +136,23 @@ console.log(data,"dadata")
             <th className="text-center px-2 py-3 border-b">Name</th>
             <th className="text-center px-2 py-3 border-b">Plan</th>
             <th className="text-center px-2 py-3 border-b">Payment Status</th>
-            <th className="text-center px-2 py-3 border-b" align="right">Subscription Amount</th>
+            <th className="text-center px-2 py-3 border-b" align="right">Order Amount</th>
             <th className="text-center px-2 py-3 border-b">View</th>
 
           </tr>
         </thead>
         <tbody>
+        <tr>
+                  {/* <td colSpan="100%" style={{ textAlign: "center" }}>
+                    <Pagination
+                      totalCount={totalCount}
+                      contentPerPage={contentPerPage}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      page={page}
+                    />
+                  </td> */}
+                </tr>
           {data.map(row => (
             <tr key={row._id}>
               <td className="text-center px-2 py-3 border-b">{new Date(row.createdAt).toLocaleString()}
@@ -125,10 +164,8 @@ console.log(data,"dadata")
               <td className="text-center px-2 py-3 border-b">{row?.status}</td>
               <td className="text-center px-2 py-3 border-b" align="right">{row.price}</td>
               <td className="px-1 py-3 border-b text-center">
-                      <Link to={`/plans/add-plan?planId=${row._id}`}>
-                        {/* <IconButton size="small"> */}
+                      <Link to={`/orders/details?orderId=${row._id}`}>
                           <p>Detail</p>
-                        {/* </IconButton> */}
                       </Link>
                     </td>
             </tr>
