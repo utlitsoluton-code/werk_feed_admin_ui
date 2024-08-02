@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import Filters from "../components/common/Filters";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-
 import { Button, CircularProgress, IconButton } from "@mui/material";
 import Swal from "sweetalert2";
-
 import Pagination from "../components/common/Pagination";
 import faqsApi from './../api/faqs';
 import { toast } from "react-toastify";
@@ -16,37 +14,14 @@ const Faq = () => {
   const [page, setPage] = useState(1);
   const [contentPerPage, setContentPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState();
-//  const useEffect = () => {
-//     (async () => {
-//       try {
-//         setLoading(true);
-//         const res = await faqsApi.readAll(
-//           contentPerPage,
-//           page,
-//           searchKey,
+  const [handleUpdate, setHandleUpdate] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [totalCount, setTotalCount] = useState();
 
-//         );
-//         if(res.data.meta.status){
-//         const res = await faqsApi.readAll(contentPerPage, page, searchKey);
-//         if (res.data.meta.status) {
-//           const pagination = res?.data?.pagination;
-//           setTotalCount(pagination?.totalCount);
-//           setTotalPages(pagination?.totalPages);
-//            setData(res.data.data);
-//         }else{
-//           setData(res.data.data);
-//         } else {
-//           toast.error("Error in fetch data");
-//          }
 
-//         }
-//       } catch (err) {
-//         console.error(err);
-//       } finally {
-//         setLoading(false);
 
-//   }
-// })
+
 useEffect(() => {
     (async () => {
       try {
@@ -85,6 +60,7 @@ useEffect(() => {
       setData(data);
     }
   })
+};
   
 
   const onSearchChange = async (event) => {
@@ -177,7 +153,6 @@ useEffect(() => {
   };
 
  
-};
 return (
     <div>
          <h1 className='text-2xl font-semibold pl-3 pb-2 border-b-2'>Faqs</h1>
@@ -219,8 +194,7 @@ return (
                 <th className="text-center px-2 py-3 border-b">Answer</th>
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
-                  <th className="px-2 py-3 border-b"></th>
-                  <th className="px-2 py-3 border-b"></th>
+                
 
                   <th className="px-2 py-3 border-b">Update</th>
                   <th className="px-2 py-3 border-b">Delete</th>
@@ -242,10 +216,12 @@ return (
                 {data?.map((item) => (
                   <tr key={item?._id}>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.question}
+                      {item?.question.length > 30 ? item.question.slice(0, 30) + '...' : item.question}
+
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.answer}
+                      {item?.answer.length > 30 ? item.answer.slice(0, 30) + '...' : item.answer}
+
                     </td>
                   
                     <td className="text-center px-2 py-3 border-b">

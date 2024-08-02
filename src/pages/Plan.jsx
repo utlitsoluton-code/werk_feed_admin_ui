@@ -6,7 +6,7 @@ import { Button, CircularProgress, IconButton } from "@mui/material";
 import Pagination from "../components/common/Pagination";
 import planApi from "./../api/plan";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 
 const Plan = () => {
