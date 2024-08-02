@@ -13,6 +13,12 @@ import Plan from "../pages/Plan";
 import AddPlan from "../components/Plan/AddPlan";
 import AddTerm from './../components/StaticData/AddTerm';
 import Users from "../pages/User";
+import Category from "../pages/Category"
+import AddCategory from './../components/Category/AddCategory';
+import Templates from '../pages/Templates';
+import AddTemplate from './../components/Template/AddTemplate';
+import Dashboard from "../pages/Dashboard";
+
 
 
 
@@ -28,6 +34,10 @@ const Routes = () => {
           children: [
             {
               path: "/",
+              element: <Dashboard />,
+            },
+            {
+              path: "/static-pages",
               element: <Home />,
             },
             {
@@ -61,6 +71,22 @@ const Routes = () => {
             {
               path: "/term-and-condition/add",
               element: <AddTerm />,
+            },
+            {
+              path: "/categories",
+              element: <Category />,
+            },
+            {
+              path: "/categories/add-category",
+              element: <AddCategory />,
+            },
+            {
+              path: "/templates",
+              element: <Templates />,
+            },
+            {
+              path: "/templates/add-template",
+              element: <AddTemplate />,
             },
             
             {

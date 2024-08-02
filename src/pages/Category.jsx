@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Filters from "../components/common/Filters";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { Button, CircularProgress, IconButton } from "@mui/material";
 import Pagination from "../components/common/Pagination";
-import planApi from "./../api/plan";
+import categoryApi from "../api/category";
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2'
 
 
-const Plan = () => {
+const Category = () => {
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
   const [contentPerPage, setContentPerPage] = useState(10);
@@ -23,16 +23,12 @@ const Plan = () => {
     (async () => {
       try {
         setLoading(true);
-        const res = await planApi.readAll(contentPerPage, page, searchKey);
+        const res = await categoryApi.readAll(contentPerPage, page, searchKey);
         if (res.data.meta.status) {
           const pagination = res?.data?.pagination;
           setTotalCount(pagination?.totalCount);
           setTotalPages(pagination?.totalPages);
           setData(res.data.data);
-        }else if (res.data.meta.msg === "Session Expired.") {
-          logout(); // Call the logout function
-          const { logout } = useContext(AdminContext);
-          toast.error("Session expired. Please login again.");
         } else {
           toast.error("Error in fetch data");
         }
@@ -45,7 +41,7 @@ const Plan = () => {
   }, [handleUpdate]);
   let clearAllQuery = async () => {
     setSearchKey("", async () => {
-      const res = await planApi.readAll(contentPerPage, page, "");
+      const res = await categoryApi.readAll(contentPerPage, page, "");
       if (res.data) {
         const data = res?.data?.data;
         const pagination = res?.data?.pagination;
@@ -59,13 +55,13 @@ const Plan = () => {
   };
 
   const onSearchChange = async (event) => {
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    const res = await categoryApi.readAll(contentPerPage, page, searchKey);
     setData(res?.data?.data);
   };
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    const res = await categoryApi.readAll(contentPerPage, page, searchKey);
     setData(res?.data?.data);
   };
 
@@ -73,7 +69,7 @@ const Plan = () => {
   const deletePlan = async (e, planId) => {
     e.target.disabled = true;
     try {
-      const result = await planApi.delete(planId);
+      const result = await categoryApi.delete(planId);
       if (result.data.meta.status) {
         toast.success("Deleted");
         setHandleUpdate(!handleUpdate);
@@ -90,7 +86,7 @@ const Plan = () => {
   const handleChangeRowsPerPage = async (event) => {
     const contentPerPage = parseInt(event.target.value, 10);
 
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    const res = await categoryApi.readAll(contentPerPage, page, searchKey);
     setData(res?.data?.data);
   };
 
@@ -110,7 +106,7 @@ const Plan = () => {
       confirmButtonText: 'Yes!',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await planApi.updateStatus({_id, status:data === 'ACTIVE' ? 'DEACTIVE' : 'ACTIVE'})
+        await categoryApi.updateStatus({_id, status:data === 'ACTIVE' ? 'DEACTIVE' : 'ACTIVE'})
           .then((d) => {
             Swal.fire({
               title: 'Changed!',
@@ -126,12 +122,12 @@ const Plan = () => {
   }
   return (
     <div>
-      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Plan</h1>
+      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Category</h1>
       <div className="flex justify-between my-5">
         <div className=""></div>
-        <Link to={"/plans/add-plan"}>
+        <Link to={"/categories/add-category"}>
           <Button variant="outlined" startIcon={<Add />}>
-            Add Plan
+            Add Category
           </Button>
         </Link>
       </div>
@@ -158,12 +154,9 @@ const Plan = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <th className="text-center px-2 py-3 border-b">Title</th>
-                  <th className="text-center px-2 py-3 border-b">Price</th>
-                  <th className="text-center px-2 py-3 border-b">Duration</th>
-                  <th className="text-center px-2 py-3 border-b">Downloads</th>
-                  <th className="text-center px-2 py-3 border-b">Templates</th>
-
+                  <th className="text-center px-2 py-3 border-b">Category Id</th>
+                  <th className="text-center px-2 py-3 border-b">Category Name</th>
+                  <th className="text-center px-2 py-3 border-b">type</th>
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
                   <th className="px-2 py-3 border-b">Update</th>
@@ -186,20 +179,15 @@ const Plan = () => {
                 {data?.map((item) => (
                   <tr key={item?._id}>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.title}
+                      {item?.categoryId}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.price}
+                      {item?.categoryName}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.duration}
+                      {item?.type}
                     </td>
-                    <td className="text-center px-2 py-3 border-b">
-                      {item?.downloadCount}
-                    </td>
-                    <td className="text-center px-2 py-3 border-b">
-                      {item?.templateCount}
-                    </td>
+                  
                     <td className="text-center px-2 py-3 border-b">
                       {new Date(item?.createdAt).toLocaleString()}
                     </td>
@@ -216,7 +204,7 @@ const Plan = () => {
                       {item?.status}
                     </td>
                     <td className="px-1 py-3 border-b text-center">
-                      <Link to={`/plans/add-plan?planId=${item._id}`}>
+                      <Link to={`/categories/add-category?categoryId=${item._id}`}>
                         <IconButton size="small">
                           <Edit size="small" />
                         </IconButton>
@@ -259,4 +247,4 @@ const Plan = () => {
   );
 };
 
-export default Plan;
+export default Category;

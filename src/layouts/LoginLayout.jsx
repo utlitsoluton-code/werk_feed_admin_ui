@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { TextField, Button, Box, CircularProgress } from '@mui/material';
-import Cookies from 'js-cookie';
 import authApi from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";

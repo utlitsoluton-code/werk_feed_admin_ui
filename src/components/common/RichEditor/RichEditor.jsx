@@ -88,7 +88,6 @@ const InitialTextSetPlugin = ({ content }) => {
 
 
 export default function RichEditor({ changeHandler, content, initialContent }) {
-    console.log(content,"content")
 
     const onChange = (editorState, RichEditor) => {
         RichEditor.update(() => {

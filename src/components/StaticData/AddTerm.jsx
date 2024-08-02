@@ -130,7 +130,7 @@ const AddTerm = ({ refetch }) => {
   return (
     <div>
       <h1 className="text-2xl font-semibold mb-4 pl-3 pb-2 border-b-2">
-        {term?._id ? "Update term and conditions" : "Add term and condition"}
+        {term?._id ? "Update" : "Add"}
       </h1>
       <Button
         onClick={() => window.history.back()}
@@ -245,7 +245,8 @@ const AddTerm = ({ refetch }) => {
                   submitting && <CircularProgress color="inherit" size={16} />
                 }
               >
-                Update terms
+                Update
+
               </Button>
             </div>
           </div>

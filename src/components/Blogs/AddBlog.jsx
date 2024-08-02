@@ -170,7 +170,8 @@ const AddBlog = () => {
                             content={blog.description}
                             changeHandler={(html, text) => {
                                 if (text.trim()) {
-                                    setBlog({ ...blog, description: html, description: text.trim() });
+                                    // setBlog({ ...blog, description: html, description: text.trim() });
+                                    setBlog({...blog, description: html, summary: text.trim() });
                                 }
                             }}
                         />

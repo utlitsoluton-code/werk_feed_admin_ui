@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import faqsApi from "../../api/faqs";
 import { ChevronLeft } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { TextInputField } from "../shared/TripsFields";
+import parse from 'html-react-parser';
 const AddFaq = () => {
   // states
   const [faq, setFaq] = useState({ question: "", answer: "" });
@@ -128,7 +128,6 @@ const AddFaq = () => {
       })();
     }
   }, [faqId]);
-  console.log(faq?.answer, "faq?.answer");
   return (
     <div className="">
       <h1 className="text-2xl font-semibold mb-4 pl-3 pb-2 border-b-2">
@@ -164,10 +163,11 @@ const AddFaq = () => {
             <div className="col-span-2">
               <RichEditor
                 initialContent={editorInitContent}
-                content={faq?.answer}
+               content={parse(faq.answer)}
                 changeHandler={(html, text) => {
                   if (text.trim()) {
-                    setFaq({ ...faq, answer: html, answer: text.trim() });
+                    setFaq({...faq, answer: html, summary: text.trim() });
+
                   }
                 }}
               />
@@ -218,7 +218,8 @@ const AddFaq = () => {
                 content={faq.answer}
                 changeHandler={(html, text) => {
                   if (text.trim()) {
-                    setFaq({ ...faq, answer: html, answer: text.trim() });
+                    setFaq({...faq, answer: html, summary: text.trim() });
+
                   }
                 }}
               />

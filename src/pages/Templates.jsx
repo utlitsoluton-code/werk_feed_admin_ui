@@ -3,18 +3,13 @@ import Filters from "../components/common/Filters";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { Button, CircularProgress, IconButton } from "@mui/material";
-import Pagination from "../components/common/Pagination";
-import planApi from "./../api/plan";
+import templateApi from "../api/template";
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2'
 
 
-const Plan = () => {
+const Templates = () => {
   const [searchKey, setSearchKey] = useState("");
-  const [page, setPage] = useState(1);
-  const [contentPerPage, setContentPerPage] = useState(10);
-  const [totalPages, setTotalPages] = useState();
-  const [totalCount, setTotalCount] = useState();
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [handleUpdate, setHandleUpdate] = useState(false);
@@ -23,11 +18,9 @@ const Plan = () => {
     (async () => {
       try {
         setLoading(true);
-        const res = await planApi.readAll(contentPerPage, page, searchKey);
+        const res = await templateApi.readAll(searchKey);
         if (res.data.meta.status) {
-          const pagination = res?.data?.pagination;
-          setTotalCount(pagination?.totalCount);
-          setTotalPages(pagination?.totalPages);
+
           setData(res.data.data);
         }else if (res.data.meta.msg === "Session Expired.") {
           logout(); // Call the logout function
@@ -45,13 +38,9 @@ const Plan = () => {
   }, [handleUpdate]);
   let clearAllQuery = async () => {
     setSearchKey("", async () => {
-      const res = await planApi.readAll(contentPerPage, page, "");
+      const res = await templateApi.readAll("");
       if (res.data) {
         const data = res?.data?.data;
-        const pagination = res?.data?.pagination;
-
-        setTotalCount(pagination?.totalCount);
-        setTotalPages(pagination?.totalPages);
         setData(data);
         setHandleUpdate(!handleUpdate);
       }
@@ -59,21 +48,18 @@ const Plan = () => {
   };
 
   const onSearchChange = async (event) => {
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
+    const res = await templateApi.readAll(searchKey);
     setData(res?.data?.data);
   };
 
-  const handleChangePage = async (event, newPage) => {
-    setPage(newPage);
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
-    setData(res?.data?.data);
-  };
+  
 
   // delete trip
-  const deletePlan = async (e, planId) => {
+  const deletetemplate = async (e, templateId) => {
     e.target.disabled = true;
     try {
-      const result = await planApi.delete(planId);
+      const result = await templateApi.delete(templateId);
+
       if (result.data.meta.status) {
         toast.success("Deleted");
         setHandleUpdate(!handleUpdate);
@@ -87,12 +73,7 @@ const Plan = () => {
     }
   };
 
-  const handleChangeRowsPerPage = async (event) => {
-    const contentPerPage = parseInt(event.target.value, 10);
-
-    const res = await planApi.readAll(contentPerPage, page, searchKey);
-    setData(res?.data?.data);
-  };
+  
 
 
   async function handleStatusChange(_id, data) {
@@ -110,7 +91,7 @@ const Plan = () => {
       confirmButtonText: 'Yes!',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await planApi.updateStatus({_id, status:data === 'ACTIVE' ? 'DEACTIVE' : 'ACTIVE'})
+        await templateApi.updateStatus({_id, status:data === 'ACTIVE' ? 'DEACTIVE' : 'ACTIVE'})
           .then((d) => {
             Swal.fire({
               title: 'Changed!',
@@ -126,18 +107,16 @@ const Plan = () => {
   }
   return (
     <div>
-      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Plan</h1>
+      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Templates</h1>
       <div className="flex justify-between my-5">
         <div className=""></div>
-        <Link to={"/plans/add-plan"}>
+        <Link to={"/templates/add-template"}>
           <Button variant="outlined" startIcon={<Add />}>
-            Add Plan
+            Add Template
           </Button>
         </Link>
       </div>
-      {/* <Button variant="outlined" startIcon={<Add />}>
-                    Filters
-                    </Button> */}
+ 
       <div className="p-5 rounded-md shadow-md bg-white mb-5">
         <Filters
           searchKey={searchKey}
@@ -158,11 +137,12 @@ const Plan = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr>
+                  <th className="text-center px-2 py-3 border-b">Template Id</th>
                   <th className="text-center px-2 py-3 border-b">Title</th>
-                  <th className="text-center px-2 py-3 border-b">Price</th>
-                  <th className="text-center px-2 py-3 border-b">Duration</th>
-                  <th className="text-center px-2 py-3 border-b">Downloads</th>
+                  <th className="text-center px-2 py-3 border-b">Education Level</th>
+                  <th className="text-center px-2 py-3 border-b">Color</th>
                   <th className="text-center px-2 py-3 border-b">Templates</th>
+                  <th className="text-center px-2 py-3 border-b">Category Name</th>
 
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
@@ -172,51 +152,38 @@ const Plan = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan="100%" style={{ textAlign: "center" }}>
-                    <Pagination
-                      totalCount={totalCount}
-                      contentPerPage={contentPerPage}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                      page={page}
-                    />
-                  </td>
-                </tr>
+            
                 {data?.map((item) => (
                   <tr key={item?._id}>
+                    <td className="text-center px-2 py-3 border-b">
+                      {item?.templateId}
+                    </td>
                     <td className="text-center px-2 py-3 border-b">
                       {item?.title}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.price}
+                      {item?.educationLevel}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.duration}
+                      {item?.color}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.downloadCount}
+                      {item?.template}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.templateCount}
+                      {item?.category?.categoryName}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
                       {new Date(item?.createdAt).toLocaleString()}
                     </td>
                     <td
                       className="text-center px-4 py-3 border-b"
-                      //  style={{
-                      //           backgroundColor: item?.paymentStatus === 'paid' ? 'green' :(item?.paymentStatus === 'pending')? 'yellow': "red",
-                      //           color: 'dark',
-                      //           borderRadius: '15px', // add this property
-                      //           padding: '2px 2px',
-
-                      //         }}
+                      
                     >
                       {item?.status}
                     </td>
                     <td className="px-1 py-3 border-b text-center">
-                      <Link to={`/plans/add-plan?planId=${item._id}`}>
+                      <Link to={`/templates/add-template?templateId=${item._id}`}>
                         <IconButton size="small">
                           <Edit size="small" />
                         </IconButton>
@@ -224,7 +191,7 @@ const Plan = () => {
                     </td>
                     <td className="px-1 py-3 border-b text-center">
                       <IconButton
-                        onClick={(e) => deletePlan(e, item._id)}
+                        onClick={(e) => deletetemplate(e, item._id)}
                         size="small"
                       >
                         <Delete size="small" />
@@ -259,4 +226,4 @@ const Plan = () => {
   );
 };
 
-export default Plan;
+export default Templates;

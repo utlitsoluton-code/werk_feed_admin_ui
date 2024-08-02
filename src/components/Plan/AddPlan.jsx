@@ -57,7 +57,6 @@ const AddPlan = ({ refetch }) => {
     setSubmitting(true);
 
     const formData = new FormData();
-   console.log(plan,"planData60")
     if (!plan.title) {
       setError("title is required");
       return;
@@ -87,7 +86,6 @@ const AddPlan = ({ refetch }) => {
     }
 
     try {
-      console.log(formData,"formData")
      const result= await plansApi.create(formData);
 
       if(result.data.meta.status){
@@ -139,7 +137,6 @@ const AddPlan = ({ refetch }) => {
       return;
     }
     setError("");
-    console.log(plan.benefits,"updatehandle")
     for (let key in plan) {
       if (key === '_id' || key === '__v' || key === 'status') {
         delete plan[key]; // remove _id and __v properties
@@ -188,10 +185,7 @@ const AddPlan = ({ refetch }) => {
     }
   }, [planId]);
 
-  // console.log(plan.benefits,"plan.benefits")
-  const benefititme = plan.benefits.map((item, index) =>{
-      console.log(item)
-  } )
+ 
 
   return (
     <div>

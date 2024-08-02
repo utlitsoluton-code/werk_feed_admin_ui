@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Filters from "../components/common/Filters";
-import { Delete, Edit, Add } from "@mui/icons-material";
-import { Link } from "react-router-dom";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Swal from "sweetalert2";
 
 import Pagination from "../components/common/Pagination";
@@ -29,6 +27,10 @@ const Users = () => {
           setTotalCount(pagination?.totalCount);
           setTotalPages(pagination?.totalPages);
           setData(res.data.data);
+        }else if (res.data.meta.msg === "Session Expired.") {
+          logout(); // Call the logout function
+          const { logout } = useContext(AdminContext);
+          toast.error("Session expired. Please login again.");
         } else {
           toast.error("Error in fetch data");
         }
@@ -125,15 +127,15 @@ const Users = () => {
   };
   return (
     <div>
-      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Faqs</h1>
-      <div className="flex justify-between my-5">
+      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Users</h1>
+      {/* <div className="flex justify-between my-5">
         <div className=""></div>
         <Link to={"/faqs/add-faq"}>
           <Button variant="outlined" startIcon={<Add />}>
             Add Faq
           </Button>
         </Link>
-      </div>
+      </div> */}
       {/* <Button variant="outlined" startIcon={<Add />}>
                     Filters
                     </Button> */}
@@ -163,7 +165,7 @@ const Users = () => {
 
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
-                  <th className="px-2 py-3 border-b">Update</th>
+                  {/* <th className="px-2 py-3 border-b">Update</th> */}
                   {/* <th className="px-2 py-3 border-b">Delete</th> */}
                   <th className="px-2 py-3 border-b">Action</th>
                 </tr>
@@ -200,13 +202,13 @@ const Users = () => {
                     >
                       {item?.status}
                     </td>
-                    <td className="px-1 py-3 border-b text-center">
+                    {/* <td className="px-1 py-3 border-b text-center">
                       <Link to={`/faqs/add-faq?faqId=${item._id}`}>
                         <IconButton size="small">
                           <Edit size="small" />
                         </IconButton>
                       </Link>
-                    </td>
+                    </td> */}
                     {/* <td className="px-1 py-3 border-b text-center">
                       <IconButton
                         onClick={(e) => deletefaq(e, item._id)}

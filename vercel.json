@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "files": [
+    {
+      "src": "src/api/config.js",
+      "dest": "api/config.js"
+    }
+  ]
+}

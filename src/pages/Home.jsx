@@ -47,7 +47,12 @@ const Home = () => {
         setTotalCount(pagination?.totalCount);
         setTotalPages(pagination?.totalPages);
          setData(termInfo.data.data);
-      }else{
+      }else if (res.data.meta.msg === "Session Expired.") {
+        logout(); // Call the logout function
+        const { logout } = useContext(AdminContext);
+        toast.error("Session expired. Please login again.");
+      }
+      else{
         toast.error("Error in fetch data");
        }
 
@@ -161,7 +166,7 @@ async function handleStatusChange(_id, data) {
             </div> */}
       <div className="p-5 rounded-md shadow-md bg-white">
         <h2 className="font-semibold text-xl pb-2 px-3 border-b">
-          Terms and Conditions
+        Static Pages
         </h2>
         <div className="flex justify-between my-5">
           <div className=""></div>

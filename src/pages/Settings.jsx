@@ -129,14 +129,14 @@ const Settings = () => {
               </span>
             </li>
             <li
-              key="email"
+              key="supportEmail"
               className="bg-white text-sm shadow-lg px-3 py-2 rounded-lg border flex justify-between gap-3 items-center"
             >
               <span>Support Email:</span>
               <span>{infoData?.supportEmail}</span>
             </li>
             <li
-              key="email"
+              key="contactEmail"
               className="bg-white text-sm shadow-lg px-3 py-2 rounded-lg border flex justify-between gap-3 items-center"
             >
               <span>Contact Email:</span>
@@ -260,7 +260,6 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
     // setLoading(true);
     try {
       const result = await contactInfoApi.update(contactEmail,supportEmail, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink);
-      console.log(result, "result");
       if (result.data.meta.status) {
         infoModel && close();
       } else {
@@ -402,7 +401,6 @@ export const UpdateProfile = ({ editProfile, close }) => {
     setLoading(true);
     try {
       const result = await settingsApi.resetPassword(oldPass, newPass);
-      console.log(result, "result");
       if (result.data.meta.status) {
         editProfile && close();
       } else {

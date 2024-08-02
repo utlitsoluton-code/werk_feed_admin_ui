@@ -4,6 +4,11 @@ import { BsFillPinAngleFill } from 'react-icons/bs';
 import { FaQuora } from "react-icons/fa";
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
+import { TbCategory2 } from "react-icons/tb";
+import { GrTemplate } from "react-icons/gr";
+import { MdPrivacyTip } from "react-icons/md";
+
+
 
 const NavMenu = ({ children, to, Icon }) => {
     return <NavLink to={to} className={({ isActive }) => `text-sm flex gap-x-2 leading-none items-center py-3 px-3 ${isActive && 'bg-[#f2f2f2] font-medium text-[#853095]'} duration-300 hover:bg-[#f2f2f2] rounded-l-lg`}>
@@ -16,9 +21,14 @@ const SidebarMenu = () => {
 
     const navLinks = [
         {
-            name: 'Home',
+            name: 'Dashboard',
             to: '/',
             Icon: Home
+        },
+        {
+            name: 'Static Pages',
+            to: '/static-pages',
+            Icon: MdPrivacyTip
         },
         {
             name: 'Users',
@@ -30,71 +40,31 @@ const SidebarMenu = () => {
             to: '/plans',
             Icon: CardMembership
         },
-        {
-            name: 'Blogs',
-            to: '/blogs',
-            Icon: BsFillPinAngleFill
-        },
+        // {
+        //     name: 'Blogs',
+        //     to: '/blogs',
+        //     Icon: BsFillPinAngleFill
+        // },
         {
             name: 'Faqs',
             to: '/faqs',
             Icon: FaQuora
+        },
+        {
+            name: 'Categories',
+            to: '/categories',
+            Icon: TbCategory2
+        },
+        {
+            name: 'Templates',
+            to: '/templates',
+            Icon: GrTemplate
         },
          {
             name: 'Settings',
             to: '/settings',
             Icon: SettingsIcon
         },
-        // {
-        //     name: 'Category',
-        //     to: '/categories',
-        //     Icon: BiSolidCategoryAlt
-        // },
-        // {
-        //     name: 'Places',
-        //     to: '/places',
-        //     Icon: LocationCity
-        // },
-        // {
-        //     name: 'Cabs',
-        //     to: '/cabs',
-        //     Icon: AiFillCar
-        // },
-        // {
-        //     name: 'Attach Taxis',
-        //     to: '/attach-taxis',
-        //     Icon: FaCarSide
-        // },
-        // {
-        //     name: 'One-Way Trip',
-        //     to: '/one-way-trip',
-        //     Icon: FaArrowRightToCity
-        // },
-        // {
-        //     name: 'Round Trip',
-        //     to: '/round-trip',
-        //     Icon: RiLoopRightLine
-        // },
-        // {
-        //     name: 'Local Trip',
-        //     to: '/local-trip',
-        //     Icon: FaTram
-        // },
-        // {
-        //     name: 'Transfer Trip',
-        //     to: '/transfer-trip',
-        //     Icon: LocationCity
-        // },
-        // {
-        //     name: 'Bookings',
-        //     to: '/bookings',
-        //     Icon: BiSolidCategoryAlt
-        // },
-        // {
-        //     name: 'Settings',
-        //     to: '/settings',
-        //     Icon: Settings
-        // },
     ];
 
     return (
