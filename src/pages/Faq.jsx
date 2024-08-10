@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button, CircularProgress, IconButton } from "@mui/material";
 import Swal from "sweetalert2";
 import Pagination from "../components/common/Pagination";
-import faqsApi from './../api/faqs';
+import faqsApi from "./../api/faqs";
 import { toast } from "react-toastify";
 
 const Faq = () => {
@@ -19,21 +19,25 @@ const Faq = () => {
   const [data, setData] = useState([]);
   const [totalCount, setTotalCount] = useState();
 
+  const truncateText = (text, length) => {
+    if (text.length > length) {
+      return text.slice(0, length) + "...";
+    }
+    return text;
+  };
 
-
-
-useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-          const res = await faqsApi.readAll(contentPerPage, page, searchKey);
+        const res = await faqsApi.readAll(contentPerPage, page, searchKey);
 
         if (res.data.meta.status) {
           const pagination = res?.data?.pagination;
           setTotalCount(pagination?.totalCount);
           setTotalPages(pagination?.totalPages);
           setData(res.data.data);
-        }else if (res.data.meta.msg === "Session Expired.") {
+        } else if (res.data.meta.msg === "Session Expired.") {
           logout(); // Call the logout function
           const { logout } = useContext(AdminContext);
           toast.error("Session expired. Please login again.");
@@ -47,66 +51,58 @@ useEffect(() => {
       }
     })();
   }, [handleUpdate]);
- 
-  let clearAllQuery = async () => {
-    setSearchKey("", async() => {
 
-       const res = await faqsApi.readAll(contentPerPage, page,"");
-    if (res.data) {
-      const data = res?.data?.data;
-      const pagination = res?.data?.pagination;
-      setTotalCount(pagination?.totalCount);
-      setTotalPages(pagination?.totalPages);
-      setData(data);
-    }
-  })
-};
-  
+  let clearAllQuery = async () => {
+    setSearchKey("", async () => {
+      const res = await faqsApi.readAll(contentPerPage, page, "");
+      if (res.data) {
+        const data = res?.data?.data;
+        const pagination = res?.data?.pagination;
+        setTotalCount(pagination?.totalCount);
+        setTotalPages(pagination?.totalPages);
+        setData(data);
+      }
+    });
+  };
 
   const onSearchChange = async (event) => {
-   
     const res = await faqsApi.readAll(contentPerPage, page, searchKey);
     setData(res?.data?.data);
   };
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
-    const res = await faqsApi.readAll(
-      contentPerPage,
-      page,
-      searchKey,
-    );
+    const res = await faqsApi.readAll(contentPerPage, page, searchKey);
     setData(res?.data?.data);
   };
 
-   // delete trip
-   const deletefaq = async (e, faqId) => {
   // delete trip
   const deletefaq = async (e, faqId) => {
-    e.target.disabled = true;
-    try {
-      const result = await faqsApi.delete(faqId);
-        if(result.data.meta.status){
+    // delete trip
+    const deletefaq = async (e, faqId) => {
+      e.target.disabled = true;
+      try {
+        const result = await faqsApi.delete(faqId);
+        if (result.data.meta.status) {
           toast.success("Deleted");
-          setHandleUpdate(!handleUpdate)
-
-         }else{
+          setHandleUpdate(!handleUpdate);
+        } else {
           toast.error("Delete failed");
-         }
-      if (result.data.meta.status) {
-        toast.success("Deleted");
-        setHandleUpdate(!handleUpdate);
-      } else {
-        toast.error("Delete failed");
-      }
-    } catch (err) {
+        }
+        if (result.data.meta.status) {
+          toast.success("Deleted");
+          setHandleUpdate(!handleUpdate);
+        } else {
+          toast.error("Delete failed");
+        }
+      } catch (err) {
         console.error(err);
-      console.error(err);
-    } finally {
+        console.error(err);
+      } finally {
         e.target.disabled = false;
-      e.target.disabled = false;
-    }
-   }
+        e.target.disabled = false;
+      }
+    };
   };
   async function handleStatusChange(_id, data) {
     if (!_id || !data) {
@@ -152,21 +148,18 @@ useEffect(() => {
     setData(res?.data?.data);
   };
 
- 
-return (
+  return (
     <div>
-         <h1 className='text-2xl font-semibold pl-3 pb-2 border-b-2'>Faqs</h1>
-            <div className='flex justify-between my-5'>
-                <div className=''>
+      <h1 className="text-2xl font-semibold pl-3 pb-2 border-b-2">Faqs</h1>
+      <div className="flex justify-between my-5">
+        <div className=""></div>
+        <Link to={"/faqs/add-faq"}>
+          <Button variant="outlined" startIcon={<Add />}>
+            Add Faq
+          </Button>
+        </Link>
+      </div>
 
-                </div>
-                <Link to={'/faqs/add-faq'}>
-                    <Button variant="outlined" startIcon={<Add />}>
-                        Add Faq
-                    </Button>
-                </Link>
-            </div>
-       
       <div className="p-5 rounded-md shadow-md bg-white mb-5">
         <Filters
           searchKey={searchKey}
@@ -176,8 +169,8 @@ return (
           onSearchChange={onSearchChange}
           clearAllQuery={clearAllQuery}
         />
-        </div>
-        <div className="mt-10 bg-white rounded-xl pb-10 overflow-hidden">
+      </div>
+      <div className="mt-10 bg-white rounded-xl pb-10 overflow-hidden">
         {isLoading && (
           <div className="pt-10 flex justify-center">
             <CircularProgress />
@@ -189,12 +182,11 @@ return (
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                <th className="text-center px-2 py-3 border-b">Question</th>
+                  <th className="text-center px-2 py-3 border-b">Question</th>
 
-                <th className="text-center px-2 py-3 border-b">Answer</th>
+                  <th className="text-center px-2 py-3 border-b">Answer</th>
                   <th className="text-center px-2 py-3 border-b">Date</th>
                   <th className="text-center px-2 py-3 border-b">Status</th>
-                
 
                   <th className="px-2 py-3 border-b">Update</th>
                   <th className="px-2 py-3 border-b">Delete</th>
@@ -216,14 +208,18 @@ return (
                 {data?.map((item) => (
                   <tr key={item?._id}>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.question.length > 30 ? item.question.slice(0, 30) + '...' : item.question}
-
+                      {item?.question.length > 30
+                        ? item.question.slice(0, 30) + "..."
+                        : item.question}
                     </td>
                     <td className="text-center px-2 py-3 border-b">
-                      {item?.answer.length > 30 ? item.answer.slice(0, 30) + '...' : item.answer}
-
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: truncateText(item?.answer, 30),
+                        }}
+                      />
                     </td>
-                  
+
                     <td className="text-center px-2 py-3 border-b">
                       {new Date(item?.createdAt).toLocaleString()}
                     </td>
@@ -239,19 +235,22 @@ return (
                     >
                       {item?.status}
                     </td>
-                    <td  className="px-1 py-3 border-b text-center">
-                                    <Link to={`/faqs/add-faq?faqId=${item._id}`}>
-                                     <IconButton size='small'>
-                                        <Edit size='small' />
-                                    </IconButton> 
-                                    </Link>
-                                </td>
-                                    <td className="px-1 py-3 border-b text-center">
-                                        <IconButton onClick={(e) => deletefaq(e, item._id)} size="small">
-                                            <Delete size='small' />
-                                        </IconButton>
-                                    </td>
-                                    <td className="text-center border-b">
+                    <td className="px-1 py-3 border-b text-center">
+                      <Link to={`/faqs/add-faq?faqId=${item._id}`}>
+                        <IconButton size="small">
+                          <Edit size="small" />
+                        </IconButton>
+                      </Link>
+                    </td>
+                    <td className="px-1 py-3 border-b text-center">
+                      <IconButton
+                        onClick={(e) => deletefaq(e, item._id)}
+                        size="small"
+                      >
+                        <Delete size="small" />
+                      </IconButton>
+                    </td>
+                    <td className="text-center border-b">
                       <p
                         onClick={() =>
                           handleStatusChange(item._id, item?.status)
@@ -266,7 +265,6 @@ return (
                         {item?.status}
                       </p>
                     </td>
-                   
                   </tr>
                 ))}
               </tbody>
@@ -277,8 +275,8 @@ return (
             </p>
           ))}
       </div>
-</div>
+    </div>
   );
-}
+};
 
 export default Faq;

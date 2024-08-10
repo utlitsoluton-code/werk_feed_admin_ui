@@ -253,13 +253,9 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
   const handleInfoDetail = async (e) => {
 
     e.preventDefault();
-    const { contactEmail,supportEmail, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink } = infoData;
-
-
-
-    // setLoading(true);
+    const { contactEmail,supportEmail, mobile, address, facebookLink, twitterLink, instagramLink, linkedInLink } = infoData;
     try {
-      const result = await contactInfoApi.update(contactEmail,supportEmail, address, mobile, facebookLink, twitterLink, instagramLink, linkedInLink);
+      const result = await contactInfoApi.update(contactEmail,supportEmail, mobile, address, facebookLink, twitterLink, instagramLink, linkedInLink);
       if (result.data.meta.status) {
         infoModel && close();
       } else {
@@ -273,9 +269,7 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
   };
 
   useEffect(() => {
-    // if (category) {
-    //   setCategoryName(category.name);
-    // }
+    
   }, [infoModel]);
 
   return (
@@ -311,6 +305,15 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
                         value={infoData.mobile}
                         onChange={(e) => setInfoData({ ...infoData, mobile: e.target.value })}
                     />
+                     <TextField
+                        label="Address"
+                        variant="outlined"
+                        type="text"
+                        fullWidth size='small'
+                        name='address'
+                        value={infoData.address}
+                        onChange={(e) => setInfoData({ ...infoData, address: e.target.value })}
+                    />
                     <TextField
                         label="Facebook Link"
                         variant="outlined"
@@ -319,7 +322,7 @@ export const UpdateInformation = ({ infoModel, close, infoData, setInfoData}) =>
                         name='facebookLink'
                         value={infoData.facebookLink}
                         onChange={(e) => setInfoData({ ...infoData, facebookLink: e.target.value })}
-                    />
+                    /> 
                       <TextField
                         label="Twitter Link"
                         variant="outlined"
